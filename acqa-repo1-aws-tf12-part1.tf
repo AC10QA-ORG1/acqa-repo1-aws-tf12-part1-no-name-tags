@@ -318,8 +318,6 @@ resource "aws_cloudwatch_log_stream" "acqa-test-cwstream1" {
 
 #Create EC2
 data "aws_ami" "acqa-test-instance1-ami" {
-#ts:skip=AC_AWS_0154 skip-test-2
-#ts:skip=AC_AWS_0456
   most_recent = true
 
   filter {
@@ -372,6 +370,8 @@ resource "aws_eip" "acqa-test-eip1" {
 
 # ec2
 resource "aws_instance" "acqa-test-instance1" {
+#ts:skip=AC_AWS_0154 skip-test-2
+#ts:skip=AC_AWS_0456
   ami           = data.aws_ami.acqa-test-instance1-ami.id
   instance_type = "t2.micro"
 
