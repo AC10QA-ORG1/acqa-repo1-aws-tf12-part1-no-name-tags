@@ -318,6 +318,8 @@ resource "aws_cloudwatch_log_stream" "acqa-test-cwstream1" {
 
 #Create EC2
 data "aws_ami" "acqa-test-instance1-ami" {
+#ts:skip=AC_AWS_0154 skip-test-2
+#ts:skip=AC_AWS_0456
   most_recent = true
 
   filter {
@@ -503,6 +505,7 @@ EOF
 
 # Start -------------- Dynamodb table
 resource "aws_dynamodb_table" "acqa-test-dynamodbtable1" {
+#ts:skip=AC_AWS_0376 skip-test1
   name             = "acqa-test-dynamodbtable1"
   hash_key         = "TestTableHashKey"
   billing_mode     = "PAY_PER_REQUEST"
