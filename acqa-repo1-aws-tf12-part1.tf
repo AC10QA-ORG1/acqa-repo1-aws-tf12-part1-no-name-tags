@@ -1,19 +1,19 @@
 provider "aws" {
   region = "ca-central-1" //Canada
-#  skip_credentials_validation = true
-#  skip_requesting_account_id  = true
-#  access_key                  = "mock_access_key"
-#  secret_key                  = "mock_secret_key"
+  #  skip_credentials_validation = true
+  #  skip_requesting_account_id  = true
+  #  access_key                  = "mock_access_key"
+  #  secret_key                  = "mock_secret_key"
 }
 
 # Create a VPC to launch our instances into
 resource "aws_vpc" "acqa-test-vpc1" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = format("%s-vpc1", var.acqaPrefix)
+    Name         = format("%s-vpc1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
-    Drift = "Test"
+    Owner        = "ACQA"
+    Drift        = "Test"
   }
 }
 
@@ -24,9 +24,9 @@ resource "aws_security_group" "acqa-test-securitygroup1" {
   vpc_id      = aws_vpc.acqa-test-vpc1.id
 
   tags = {
-    Name = format("%s-securitygroup1", var.acqaPrefix)
+    Name         = format("%s-securitygroup1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 
   # SSH access from anywhere..
@@ -57,7 +57,7 @@ resource "aws_security_group" "acqa-test-securitygroup1" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/24"]
   }
-  
+
   # Drift 2
   ingress {
     to_port     = 3333
@@ -65,7 +65,7 @@ resource "aws_security_group" "acqa-test-securitygroup1" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/24"]
   }
-  
+
   # outbound internet access
   egress {
     from_port   = 0
@@ -79,9 +79,9 @@ resource "aws_security_group" "acqa-test-securitygroup1" {
 resource "aws_internet_gateway" "acqa-test-gateway1" {
   vpc_id = aws_vpc.acqa-test-vpc1.id
   tags = {
-    Name = format("%s-gateway1", var.acqaPrefix)
+    Name         = format("%s-gateway1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 }
 
@@ -89,12 +89,12 @@ resource "aws_internet_gateway" "acqa-test-gateway1" {
 resource "aws_subnet" "acqa-test-subnet1" {
   vpc_id                  = aws_vpc.acqa-test-vpc1.id
   cidr_block              = "10.0.0.0/24"
-  availability_zone = "ca-central-1a"
+  availability_zone       = "ca-central-1a"
   map_public_ip_on_launch = true
   tags = {
-    Name = format("%s-subnet1", var.acqaPrefix)
+    Name         = format("%s-subnet1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 }
 
@@ -109,9 +109,9 @@ resource "aws_network_interface" "acqa-test-networkinterface1" {
   #   device_index = 1
   # }
   tags = {
-    Name = format("%s-networkinterface1", var.acqaPrefix)
+    Name         = format("%s-networkinterface1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 }
 
@@ -122,9 +122,14 @@ data "aws_canonical_user_id" "current_user" {}
 resource "aws_s3_bucket" "acqa-test-s3bucket1" {
   bucket = "acqa-test-s3bucket1"
   tags = {
-    Name = format("%s-s3bucket1", var.acqaPrefix)
+    Name         = format("%s-s3bucket1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
+  }
+
+  versioning {
+    enabled    = true
+    mfa_delete = true
   }
 }
 
@@ -138,9 +143,9 @@ resource "aws_s3_bucket_acl" "acqa-test-s3bucketAcl" {
 resource "aws_iam_role" "acqa-test-iamrole1" {
   name = "acqa-test-iamrole1"
   tags = {
-    Name = format("%s-iamrole1", var.acqaPrefix)
+    Name         = format("%s-iamrole1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 
   assume_role_policy = <<EOF
@@ -163,9 +168,9 @@ EOF
 # Create lambda function
 resource "aws_lambda_function" "acqa-test-lambda1" {
   tags = {
-    Name = format("%s-lamda1", var.acqaPrefix)
+    Name         = format("%s-lamda1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 
   filename      = "acqa-test-lambda1.zip"
@@ -238,9 +243,9 @@ module "acqa-test-cbmodule1" {
 
   # Tags
   tags = {
-    Name = format("%s-module1", var.acqaPrefix)
+    Name         = format("%s-module1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 
 }
@@ -291,9 +296,9 @@ resource "aws_cloudwatch_log_group" "acqa-test-cwlg1" {
 
   # Tags
   tags = {
-    Name = format("%s-cwlg1", var.acqaPrefix)
+    Name         = format("%s-cwlg1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 }
 resource "aws_cloudwatch_log_stream" "acqa-test-cwstream1" {
@@ -324,9 +329,9 @@ resource "aws_kms_key" "acqa-test-kmskey1" {
   description             = "acqa-test-kmskey1"
   deletion_window_in_days = 30
   tags = {
-    Name = format("%s-kmskey1", var.acqaPrefix)
+    Name         = format("%s-kmskey1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 }
 
@@ -336,9 +341,9 @@ resource "aws_ebs_volume" "acqa-test-ebsvolume1" {
   size              = 25
   encrypted         = false
   tags = {
-    Name = format("%s-ebsvolume1", var.acqaPrefix)
+    Name         = format("%s-ebsvolume1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 }
 
@@ -348,9 +353,9 @@ resource "aws_eip" "acqa-test-eip1" {
   network_interface         = aws_network_interface.acqa-test-networkinterface1.id
   associate_with_private_ip = "10.0.0.50"
   tags = {
-    Name = format("%s-eip1", var.acqaPrefix)
+    Name         = format("%s-eip1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 }
 
@@ -359,15 +364,15 @@ resource "aws_instance" "acqa-test-instance1" {
   ami           = data.aws_ami.acqa-test-instance1-ami.id
   instance_type = "t2.medium"
 
-   network_interface {
+  network_interface {
     network_interface_id = aws_network_interface.acqa-test-networkinterface1.id
     device_index         = 0
-  } 
+  }
 
   tags = {
-    Name = format("%s-instance1", var.acqaPrefix)
+    Name         = format("%s-instance1", var.acqaPrefix)
     ACQAResource = "true"
-    Owner = "ACQA"
+    Owner        = "ACQA"
   }
 }
 
