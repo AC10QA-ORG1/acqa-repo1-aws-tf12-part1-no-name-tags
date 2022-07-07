@@ -60,6 +60,10 @@ resource "aws_s3_bucket" "tcs-qe-s3-bucket2-withoutnametag-5362" {
   tags = {
     TcsQEResource = "true"
   }
+
+  versioning {
+    enabled = true
+  }
 }
 
 # Create acl resource to grant permissions on bucket
